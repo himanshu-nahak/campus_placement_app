@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <%- include("./partials/head.ejs") %>
+
+    <body>
+        
+        <div class="container">
+            <h1> Student Signup Form </h1>
+            <form class="form" action="/signup" method="POST">  
+                    <label>USN : </label>   
+                    <input type="text" placeholder="Enter USN" name="usn" class="form-control" required > <br> 
+                    <label>First Name : </label>   
+                    <input type="name" placeholder="Enter RVCE Email" name="rvce_email" class="form-control" required > <br>  
+                    <label>RVCE Email : </label>   
+                    <input type="email" placeholder="Enter RVCE Email" name="rvce_email" class="form-control" required > <br> 
+                    <label>RVCE Email : </label>   
+                    <input type="email" placeholder="Enter RVCE Email" name="rvce_email" class="form-control" required > <br> 
+                    <label>Password : </label>   
+                    <input type="password" placeholder="Enter Password" name="password" class="form-control" required> <br> 
+                    <button type="submit"class="btn btn-primary"> Sign Up</button>   
+                    
+            </form>     
+        </div>
+    </body>
+</html>
