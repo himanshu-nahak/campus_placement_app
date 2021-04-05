@@ -1,12 +1,154 @@
 <!DOCTYPE html>
 <html>
-    <%- include("./partials/head.ejs") %>
+<%- include("./partials/head.ejs") %>
 
     <body>
-        
+
         <div class="container">
             <h1> Student Dashboard </h1>
-              <h2>Welcome <%= results[0].fname %></h2>
+            <h2>Welcome <%= user[0].fname %>
+            </h2>
+            <a href="/upload_details" class="btn btn-primary">Edit My Profile</a>
+            <a href="/resume" class="btn btn-primary">My Resume</a>
+
+
+            <div class="card">
+                <h5 class="card-title">USN : </h5>
+                <label class="card-text">
+                    <%= user[0].usn %>
+                </label>
+            </div>
+
+            <div class="card">
+                <h5 class="card-title">Full Name : </h5>
+                <label class="card-text">
+                    <%= user[0].full_name %>
+                </label>
+            </div>
+
+            <div class="card">
+                <h5 class="card-title">Personal Email : </h5>
+                <label class="card-text">
+                    <%= user[0].personal_email %>
+                </label>
+            </div>
+
+            <div class="card">
+                <h5 class="card-title">RVCE Email : </h5>
+                <label class="card-text">
+                    <%= user[0].rvce_email %>
+                </label>
+            </div>
+
+            <div class="card">
+                <h5 class="card-title">Mobile : </h5>
+                <label class="card-text">
+                    <%= user[0].mobile %>
+                </label>
+            </div>
+
+            <div class="card">
+                <h5 class="card-title">Date of Birth : </h5>
+                <label class="card-text">
+                    <%= user[0].dob %>
+                </label>
+            </div>
+
+            <div class="card">
+                <h5 class="card-title">Gender : </h5>
+                <label class="card-text">
+                    <%= user[0].gender %>
+                </label>
+            </div>
+
+            <div class="card">
+                <h5 class="card-title">Std 10 Percentage : </h5>
+                <label class="card-text">
+                    <%= user[0].tenth_perc %>
+                </label>
+            </div>
+
+            <div class="card">
+                <h5 class="card-title">Std 10 Year of Passing : </h5>
+                <label class="card-text">
+                    <%= user[0].tenth_yop %>
+                </label>
+            </div>
+
+            <div class="card">
+                <h5 class="card-title">Std 12 Percentage : </h5>
+                <label class="card-text">
+                    <%= user[0].twelfth_perc %>
+                </label>
+            </div>
+
+            <div class="card">
+                <h5 class="card-title">Std 12 Year of Passing : </h5>
+                <label class="card-text">
+                    <%= user[0].twelfth_yop %>
+                </label>
+            </div>
+
+            <div class="card">
+                <h5 class="card-title">Graduation Degree : </h5>
+                <label class="card-text">
+                    <%= user[0].graduation_degree %>
+                </label>
+            </div>
+
+            <div class="card">
+                <h5 class="card-title">Graduation Percentage : </h5>
+                <label class="card-text">
+                    <%= user[0].graduation_perc %>
+                </label>
+            </div>
+
+            <div class="card">
+                <h5 class="card-title">Graduation Year of Passing : </h5>
+                <label class="card-text">
+                    <%= user[0].graduation_year %>
+                </label>
+            </div>
+
+
+
+
+            <div class="card">
+                <h5 class="card-title">Post Graduation Degree : </h5>
+                <label class="card-text">
+                    MCA
+                </label>
+            </div>
+
+            <div class="card">
+                <h5 class="card-title">Post Graduation CGPA : </h5>
+                <label class="card-text">
+                    <%= user[0].pg_cgpa %>
+                </label>
+            </div>
+
+
+            <div class="card">
+                <h5 class="card-title">Post Graduation Year of Passing : </h5>
+                <label class="card-text">
+                    2022
+                </label>
+            </div>
+
+            <div class="card">
+                <h5 class="card-title">Year Gaps : </h5>
+                <label class="card-text">
+                    <%= user[0].year_gap %>
+                </label>
+            </div>
+            <div class="card">
+                <h5 class="card-title">Address : </h5>
+                <label class="card-text">
+                    <%= user[0].address %>
+                </label>
+            </div>
+
         </div>
     </body>
+
 </html>

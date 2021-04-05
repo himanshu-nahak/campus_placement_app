@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+    <%- include("./partials/head.ejs") %>
+
+    <body>
+        
+        <div class="container">
+            <h1> Student Resume </h1>
+            <form class="form" action="/resume" method="POST">   
+                    
+                    <label>Upload Resume : </label>   
+                    <input type="file" placeholder="Upload PDF" name="foo" class="form-control" required > <br>  
+                    <button type="submit"class="btn btn-primary"> Upload</button>   
+                    <a href="#" class="btn btn-secondary">View Uploaded Resume </a>
+            </form>     
+        </div>
+    </body>
+</html>
