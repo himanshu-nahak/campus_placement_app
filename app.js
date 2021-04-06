@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
-const upload = require('express-fileupload')
+const fileUpload = require('express-fileupload')
 
 // Connect To Database
 const db = mysql.createConnection({
@@ -26,7 +26,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 app.set('view engine', 'ejs');
-app.use(upload())
+app.use(fileUpload())
 // CORS Middleware
 // app.use(cors());
 
@@ -116,9 +116,61 @@ app.get('/resume', (req,res) => {
   res.render('resume', {current_user})
 })
 
-// app.post('/resume', function(req, res) {
-//   console.log(req.files.foo.name); // the uploaded file object
-// });
+// View single resume
+app.get('/resume/:id', (req, res) => {
+  res.sendFile(__dirname + '/public/resume/' + req.params.id+'.pdf' );
+});
+
+app.post('/resume', function(req, res) {
+  let sampleFile;
+  let uploadPath;
+
+  if (!req.files || Object.keys(req.files).length === 0) {
+      console.log(req.files)
+    return res.status(400).send('No files were uploaded.');
+  }
+
+  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+  sampleFile = req.files.resume;
+  // uploadPath = __dirname + '/public/resume/' + current_user_usn + '-' + sampleFile.name;
+  uploadPath = __dirname + '/public/resume/' + current_user_usn + '.pdf';
+
+  // Use the mv() method to place the file somewhere on your server
+  sampleFile.mv(uploadPath, function(err) {
+    if (err)
+      return res.status(500).send(err);
+
+    res.send('File uploaded!');
+  });
+});
+
+app.get('/pclogin', (req, res) => {
+  res.render('pc_login')
+});
+
+app.post('/pclogin', urlencodedParser, (req, res) => {
+
+  var sql = "SELECT * FROM PlacementCell where rvce_email='" + req.body.username + "' and password='" + req.body.password + "';";
+  console.log(sql);
+
+  let query = db.query(sql, (err, user) => {
+    if (err) throw err;
+    console.log(user);
+    if (user.length == 1) {
+      current_user_usn = user[0].usn;
+      current_user = user;
+      res.render('pc_dashboard', { user });
+    }
+    else
+      res.send("User not found")
+  });
+
+});
+
+
+app.get('/drive', (req, res) => {
+  res.render('add_placement_drive')
+});
 
 
 // Start Server

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<%- include("./partials/head.ejs") %>
+
+    <body>
+
+        <div class="container">
+            <h1>Create New Placement Drive </h1>
+            <form class="form" action="/drive" method="POST">
+
+                <label>Company : </label>
+                <input type="text" placeholder="Enter Company Name" name="company_name" class="form-control" required>
+                <br>
+                <label>Role Name : </label>
+                <input type="text" placeholder="Enter Role Name" name="role_name" class="form-control" required> <br>
+                <label>Type of Offer : </label><br>
+
+                <input type="radio" name="offer" value="Full Time" required><label>Full Time Offer</label> <br>
+
+                <input type="radio" name="offer" value="Internship" required> <label>Internship</label><br>
+                <label>Package Offered in LPA: </label>
+                <input type="text" placeholder="Enter Package in LPA" name="package" class="form-control" required> <br>
+                <label>Drive Date : </label>
+                <input type="date" placeholder="Enter First Round Date" name="round1date" class="form-control" required>
+                <br>
+                <button type="submit" class="btn btn-primary"> Add Placement Drive</button>
+
+            </form>
+        </div>
+    </body>
+
+</html>

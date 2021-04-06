@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <%- include("./partials/head.ejs") %>
+
+    <body>
+        
+        <div class="container">
+            <h1> Placement Cell Login Form </h1>
+            <form class="form" action="/pclogin" method="POST">   
+                
+                    <label>Username : </label>   
+                    <input type="text" placeholder="Enter Username" name="username" class="form-control" required > <br> 
+                    <label>Password : </label>   
+                    <input type="password" placeholder="Enter Password" name="password" class="form-control" required> <br> 
+                    <button type="submit"class="btn btn-primary"> Login</button>   
+            </form>     
+        </div>
+    </body>
+</html>
