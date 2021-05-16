@@ -91,8 +91,8 @@ app.post('/signup', urlencodedParser, (req, res) => {
 });
 
 app.get('/upload_details', (req, res) => {
-  console.log("CURRENT USER:\n"+ current_user[0].fname)
-  res.render('upload_details', {current_user})
+  console.log("CURRENT USER:\n" + current_user[0].fname)
+  res.render('upload_details', { current_user })
 })
 
 
@@ -112,21 +112,21 @@ app.post('/save_student_details', urlencodedParser, (req, res) => {
 });
 
 
-app.get('/resume', (req,res) => {
-  res.render('resume', {current_user})
+app.get('/resume', (req, res) => {
+  res.render('resume', { current_user })
 })
 
 // View single resume
 app.get('/resume/:id', (req, res) => {
-  res.sendFile(__dirname + '/public/resume/' + req.params.id+'.pdf' );
+  res.sendFile(__dirname + '/public/resume/' + req.params.id + '.pdf');
 });
 
-app.post('/resume', function(req, res) {
+app.post('/resume', function (req, res) {
   let sampleFile;
   let uploadPath;
 
   if (!req.files || Object.keys(req.files).length === 0) {
-      console.log(req.files)
+    console.log(req.files)
     return res.status(400).send('No files were uploaded.');
   }
 
@@ -136,7 +136,7 @@ app.post('/resume', function(req, res) {
   uploadPath = __dirname + '/public/resume/' + current_user_usn + '.pdf';
 
   // Use the mv() method to place the file somewhere on your server
-  sampleFile.mv(uploadPath, function(err) {
+  sampleFile.mv(uploadPath, function (err) {
     if (err)
       return res.status(500).send(err);
 
@@ -159,10 +159,18 @@ app.post('/pclogin', urlencodedParser, (req, res) => {
     if (user.length == 1) {
       current_user_usn = user[0].usn;
       current_user = user;
-      res.render('pc_dashboard', { user });
+
+      var sql2 = "SELECT * FROM PlacementDrive ; ";
+      console.log("SQL QUERY TO BE FIRED: " + sql);
+      let query2 = db.query(sql2, (err, placement_drives) => {
+        if (err) throw err;
+        console.log(placement_drives);
+        res.render('pc_dashboard', { user, placement_drives });
+      });
+
     }
     else
-      res.send("User not found")
+    res.send("User not found")
   });
 
 });
@@ -171,6 +179,46 @@ app.post('/pclogin', urlencodedParser, (req, res) => {
 app.get('/drive', (req, res) => {
   res.render('add_placement_drive')
 });
+
+app.post('/drive', urlencodedParser, (req, res) => {
+
+  var company_name = "'" + req.body.company_name + "'";
+  var role_name = "'" + req.body.role_name + "'";
+  var offer = "'" + req.body.offer + "'";
+  var package = req.body.package;
+  var drive_date = "'" + req.body.round1date + "'";
+  var gender = "'" + req.body.cgender + "'";
+  if (gender == "'M,F'") gender = "'A'";
+  var mcacgpa = req.body.mcacgpa;
+  var graduationcgpa = req.body.gradcpga;
+  var activebacklogs = req.body.activebacklog;
+  var educationgap = req.body.edugap;
+
+
+  var sql = "INSERT INTO PlacementDrive(company_name, role_name, offer, package, drive_date, gender, mcacgpa, graduationcgpa, activebacklogs, educationgap) VALUES (" + company_name + "," + role_name + "," + offer + "," + package + "," + drive_date + "," + gender + "," + mcacgpa + "," + graduationcgpa + "," + activebacklogs + "," + educationgap + ");";
+  console.log(sql);
+
+  let query = db.query(sql, (err, result) => {
+    if (err) throw err;
+    var sql = "SELECT * FROM PlacementDrive ; ";
+    console.log("SQL QUERY FIRED: " + sql);
+
+    let query = db.query(sql, (err, placement_drives) => {
+      if (err) throw err;
+      console.log(placement_drives);
+      if (placement_drives.length > 0) {
+        res.render('pc_dashboard', { current_user, placement_drives });
+      }
+      else
+        res.send("User not found")
+    });
+
+    // res.render('pc_dashboard')
+  });
+
+});
+
+
 
 
 // Start Server
