@@ -4,6 +4,9 @@ const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const fileUpload = require('express-fileupload')
 
+//adding this to read the excel file
+var excelr = require('read-excel-file/node')
+
 // Connect To Database
 const db = mysql.createConnection({
   host: 'localhost',
@@ -170,7 +173,7 @@ app.post('/pclogin', urlencodedParser, (req, res) => {
 
     }
     else
-    res.send("User not found")
+      res.send("User not found")
   });
 
 });
@@ -218,8 +221,153 @@ app.post('/drive', urlencodedParser, (req, res) => {
 
 });
 
+//shreya
+app.get('/drive_create', (req, res) => {
+  res.render('drive_create.ejs')  //change
+});
+
+app.post('/drive_create', urlencodedParser, (req, res) => {
 
 
+  console.log(req.body)
+  var sql = "INSERT INTO Drive(drive_id,drive_name,com_email,com_name,com_id,offer_type,drive_create_date) values('" + req.body.d_id + "','" + req.body.dname + "','" + req.body.company_email + "','" + req.body.company_name + "','" + req.body.company_id + "','" + req.body.offer1 + "','" + req.body.drive_date + "');";
+  console.log(sql)
+  let query = db.query(sql, (err, result) => {
+    if (err) throw err;
+    console.log(result);
+    res.send('Drive Created Successfully');
+  });
+
+
+});
+
+//app.get('/drive_list', (req, res) => {
+//res.render(__dirname+'/drive_list.ejs')
+//});
+
+app.get('/drive_list', urlencodedParser, (req, res) => {
+
+  var sql = "SELECT drive_create_date,drive_id,drive_name,com_id,com_name,com_email,offer_type FROM Drive;";
+  console.log(sql);
+
+  let query = db.query(sql, (err, data, fields) => {
+    if (err) throw err;
+    console.log(data);
+    if (data.length != 0) {
+      res.render('drive_list.ejs', { title: 'Drive', userData: data });
+    }
+    else
+      res.send("User not found");
+  });
+
+});
+
+app.get('/drive_entry/:id', urlencodedParser, (req, res) => {
+  var d_id = req.params.id;
+  var sql = "SELECT drive_create_date,drive_id,drive_name,com_id,com_name,com_email,offer_type FROM Drive where drive_id='" + d_id + "';";
+  console.log(sql);
+  let query = db.query(sql, (err, data, fields) => {
+    if (err) throw err;
+    console.log(data);
+    if (data.length != 0) {
+      res.render('drive_entry.ejs', { title: 'Drive', userData: data });
+    }
+    else
+      res.send("Drive doesnot exists");
+  });
+
+});
+
+app.get('/round_list', urlencodedParser, (req, res) => {
+
+  var sql = "SELECT * FROM Round_detail;";
+  console.log(sql);
+
+  let query = db.query(sql, (err, data, fields) => {
+    if (err) throw err;
+    console.log(data);
+    if (data.length != 0) {
+      res.render('round_list.ejs', { title: 'Round_detail', userData: data });
+    }
+    else
+      res.send("User not found");
+  });
+
+});
+
+app.get('/rounds/:id/:R_no/', urlencodedParser, (req, res) => {
+  var d_id = req.params.id;
+  var r_no = req.params.R_no;
+
+
+
+  res.sendFile(__dirname + '/public/rounds/' + d_id + "-" + r_no + '.xlsx');
+
+
+
+
+  /*var sql = "SELECT * FROM Round_detail where drive_id='"+d_id+"'AND Round_no='"+d_no+"';";
+  console.log(sql);
+  let query = db.query(sql, (err, data,fields) => {
+      if (err) throw err;
+      console.log(data);
+      if (data.length != 0) {
+        res.render('round_detail.ejs', {title: 'Drive' , userData : data});
+      }
+      else
+        res.send("Round doesnot exists");
+    });
+    */
+  //  res.render('round_detail.ejs',{title: 'Round detail', userData : })
+});
+
+app.get('/Round_detail', (req, res) => {
+  res.render('create_round.ejs');
+});
+
+app.post('/Round_detail', urlencodedParser, (req, res) => {
+  console.log("DEBUGGG: " + req.body.d_id);
+  console.log(req.files)
+  var sql = "INSERT into Round_detail(drive_id,Round_no,Round_name,selected_stud_list,Reg_start_date,Reg_end_date) values('" + req.body.d_id + "','" + req.body.R_no + "','" + req.body.R_name + "','" + req.body.studentNextRoundSheet + "','" + req.body.R_start + "','" + req.body.R_end + "');";
+  console.log(sql);
+  console.log("HHHH=>" + req.files.resume.name);
+
+  let sampleFile;
+  let uploadPath;
+
+  if (!req.files || Object.keys(req.files).length === 0) {
+    console.log(req.files)
+    return res.status(400).send('No files were uploaded.');
+  }
+  
+  sampleFile = req.files.resume;
+  // uploadPath = __dirname + '/public/resume/' + current_user_usn + '-' + sampleFile.name;
+  uploadPath = __dirname + '/public/rounds/' + req.body.d_id + "-" + req.body.R_no + '.xlsx';
+
+  // Use the mv() method to place the file somewhere on your server
+  sampleFile.mv(uploadPath, function (err) {
+    if (err)
+      return res.status(500).send(err);
+
+    var query = db.query(sql, (err, data) => {
+      if (err) throw err;
+      console.log(data);
+      res.send("Record detail saved successfully");
+    });
+  });
+
+});
+
+//till here
+
+app.get('/viewround', (req, res) => {
+  res.render('test.ejs');
+});
+
+
+app.get('*', (req, res) => {
+  res.status(404).render('404.ejs');
+});
 
 // Start Server
 app.listen(port, () => {
