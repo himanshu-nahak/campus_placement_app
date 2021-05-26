@@ -25,7 +25,7 @@
                     <td>
                         <%= data.drive_create_date %>
                     </td>
-                    <td><a href="/drive_entry/<%= data.drive_id %>">
+                    <td><a href="/view_rounds/<%= data.drive_id %>">
                             <%=data.drive_id %>
                         </a></td>
                     <td>
@@ -41,7 +41,7 @@
                 <% i++; }) %>
                     <% } else{ %>
                         <tr>
-                            <td colspan="7">No Data Found</td>
+                            <td colspan="7">No Rounds Found</td>
                         </tr>
                         <% } %>
 

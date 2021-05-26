@@ -415,7 +415,7 @@ app.get('/view_drives', urlencodedParser, (req, res) => {
 
 app.get('/view_rounds/:drive_id', urlencodedParser, (req, res) => {
 
-  var sql = "SELECT * FROM Round_detail;";
+  var sql = "SELECT * FROM Round_detail where drive_id='"+ req.params.drive_id +"' ;";
   console.log(sql);
 
   let query = db.query(sql, (err,  data) => {
@@ -428,7 +428,7 @@ app.get('/view_rounds/:drive_id', urlencodedParser, (req, res) => {
       res.render('rounds.ejs', { title: 'Drive Round List', rounds: data });
     }
     else
-      res.send("User not found");
+      res.render('rounds.ejs', { title: 'Drive Round List', rounds: data });
   });
 
 });
