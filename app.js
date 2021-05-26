@@ -3,9 +3,13 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const mysql = require('mysql');
 const fileUpload = require('express-fileupload')
+var moment = require('moment'); // require
+
 
 //adding this to read the excel file
-var excelr = require('read-excel-file/node')
+var excelr = require('read-excel-file/node');
+const { response } = require('express');
+const { start } = require('repl');
 
 // Connect To Database
 const db = mysql.createConnection({
@@ -48,7 +52,17 @@ current_user_usn = '';
 current_user = {};
 // Index Route
 app.get('/', (req, res) => {
-  res.render('login')
+  res.render('home')
+});
+
+
+
+app.get('/companyresources', (req, res) => {
+  res.render('companyresources');
+});
+
+app.get('/student_profile', (req, res) => {
+  res.render('student_profile')
 });
 
 
@@ -56,7 +70,9 @@ app.get('/login', (req, res) => {
   res.render('login')
 });
 
-app.post('/login', urlencodedParser, (req, res) => {
+
+
+app.post('/dashboard', urlencodedParser, (req, res) => {
 
   var sql = "SELECT * FROM Student where rvce_email='" + req.body.username + "' and password='" + req.body.password + "';";
   console.log(sql);
@@ -67,7 +83,7 @@ app.post('/login', urlencodedParser, (req, res) => {
     if (user.length == 1) {
       current_user_usn = user[0].usn;
       current_user = user;
-      res.render('student_dashboard', { user });
+      res.render('dashboard', { user });
     }
     else
       res.send("User not found")
@@ -75,6 +91,24 @@ app.post('/login', urlencodedParser, (req, res) => {
 
 });
 
+app.get('/myprofile', (req, res) => {
+  user = {};
+  user = current_user[0];
+  res.render('student_profile', {user})
+
+  // var msg = JSON.stringify(current_user)
+  // console.log(">>"+msg)
+ 
+  // var msg = JSON.stringify(user)
+  // console.log(">>"+msg)
+  // res.send(user.usn);
+});
+
+app.get('/dashboard', (req, res) => {
+  user = {};
+  user = current_user[0];
+  res.render('dashboard', {user})
+});
 
 app.get('/signup', (req, res) => {
   res.render('signup')
@@ -339,7 +373,7 @@ app.post('/Round_detail', urlencodedParser, (req, res) => {
     console.log(req.files)
     return res.status(400).send('No files were uploaded.');
   }
-  
+
   sampleFile = req.files.resume;
   // uploadPath = __dirname + '/public/resume/' + current_user_usn + '-' + sampleFile.name;
   uploadPath = __dirname + '/public/rounds/' + req.body.d_id + "-" + req.body.R_no + '.xlsx';
@@ -359,6 +393,57 @@ app.post('/Round_detail', urlencodedParser, (req, res) => {
 });
 
 //till here
+
+//student portal to view drives and rounds
+
+app.get('/view_drives', urlencodedParser, (req, res) => {
+
+  var sql = "SELECT * FROM Drive;";
+  console.log(sql);
+
+  let query = db.query(sql, (err,  data) => {
+    if (err) throw err;
+    console.log(data);
+    if (data.length != 0) {
+      res.render('drives.ejs', { title: 'Ongoing Placement Drives', drives: data });
+    }
+    else
+      res.send("User not found");
+  });
+
+});
+
+app.get('/view_rounds/:drive_id', urlencodedParser, (req, res) => {
+
+  var sql = "SELECT * FROM Round_detail;";
+  console.log(sql);
+
+  let query = db.query(sql, (err,  data) => {
+    if (err) throw err;
+    console.log(data);
+    if (data.length != 0) {
+      // var startdate = moment(data.Reg_start_date).format('MM-DD-YYYY')
+      // console.log(startdate)
+      // data.Reg_start_date = startdate;
+      res.render('rounds.ejs', { title: 'Drive Round List', rounds: data });
+    }
+    else
+      res.send("User not found");
+  });
+
+});
+
+
+
+app.get('/logout', (req, res) => {
+  current_user = {}
+  current_user_usn = "";
+  res.render('home.ejs');
+});
+
+
+
+
 
 app.get('/viewround', (req, res) => {
   res.render('test.ejs');
