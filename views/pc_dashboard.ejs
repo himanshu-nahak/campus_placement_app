@@ -9,7 +9,27 @@
             <h2>Welcome SPC <%= user[0].name %>
             </h2>
             <a href="/drive" class="btn btn-primary">Create New Placement Drive</a>
-
+            <h2>Ongoing Placement Drives:</h2>
+            <% if (placement_drives.length> 0) { %>
+                <table class="table">
+                    <thead>
+                        <th>Company Name</th>
+                        <th>Role Offered</th>
+                    </thead>
+                    <% placement_drives.forEach(placement_drive=> { %>
+                        <tr>
+                        <td>
+                            <%= placement_drive.company_name %>
+                        </td>
+                        <td>
+                            <%= placement_drive.role_name %>
+                        </td>
+                        </tr>
+                        <% }) %>
+                </table>
+                <% } else { %>
+                    <p>There are no drives to display...</p>
+                    <% } %>
         </div>
     </body>
 

@@ -1,0 +1,57 @@
+<html>
+
+<head>
+    <title>Drive</title>
+    <%- include("./partials/head.ejs") %>
+
+</head>
+<%- include("./partials/nav_student.ejs") %>
+
+<body>
+    <h1 style="margin-left: 15rem;">Ongoing Placement Drives</h1>
+    <br>
+    <div class="container">
+        <h2> 
+        </h2>
+        <table class="table">
+            <tr>
+                <th>Round Number</th>
+                <th>Round Name</th>
+                <th>List of Students in Round</th>
+                <th>Registration Start Date</th>
+                <th>Registration End Date</th>
+
+            </tr>
+            <% if(rounds.length!=0){ var i=1; rounds.forEach(function(data){ %>
+                <tr>
+                    <td>
+                        <%= data.Round_no %>
+                    </td>
+                    <td>
+
+                        <a href="/rounds/<%= data.drive_id %> <%= data.Round_no %>.xslx">View List</a>
+                            
+                    </td>
+                    <td>
+                        <%=data.Round_name %>
+                    </td>
+                    <td>
+                        <%=data.Reg_start_date %>
+                    </td>
+                    <td>
+                        <%= data.Reg_end_date %>
+                    </td>
+                </tr>
+                <% i++; }) %>
+                    <% } else{ %>
+                        <tr>
+                            <td colspan="7">No Data Found</td>
+                        </tr>
+                        <% } %>
+
+
+        </table>
+    </div>
+</body>
+
+</html>

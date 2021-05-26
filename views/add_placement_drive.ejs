@@ -16,12 +16,28 @@
                 <label>Type of Offer : </label><br>
 
                 <input type="radio" name="offer" value="Full Time" required><label>Full Time Offer</label> <br>
-
                 <input type="radio" name="offer" value="Internship" required> <label>Internship</label><br>
+                <input type="radio" name="offer" value="Full Time and Internship" required><label>Full Time Offer +
+                    Internship</label> <br>
+                <br>
                 <label>Package Offered in LPA: </label>
                 <input type="text" placeholder="Enter Package in LPA" name="package" class="form-control" required> <br>
                 <label>Drive Date : </label>
                 <input type="date" placeholder="Enter First Round Date" name="round1date" class="form-control" required>
+                <br>
+                <label>Select Criteria for First Round: </label><br>
+                <label>Gender : </label>
+                <input type="checkbox" name="cgender" value="M" required checked><label>Male</label>
+                <input type="checkbox" name="cgender" value="F" required checked><label>Female</label> <br>
+                <label>MCA CGPA Including and Above:</label>
+                <input type="number" min="1" max="9" value="7" name="mcacgpa"><br>
+                <label>Graduation CGPA Including and Above:</label>
+                <input type="number" min="1" max="9" value="1" name="gradcpga"><br>
+                <label>Active Backlogs Allowed:</label>
+                <input type="number" min="0" max="5" value="0" name="activebacklog"><br>
+                <label>Educational Gap (Number of Years Allowed):</label>
+                <input type="number" min="0" max="10" value="0" name="edugap"><br>
+
                 <br>
                 <button type="submit" class="btn btn-primary"> Add Placement Drive</button>
 

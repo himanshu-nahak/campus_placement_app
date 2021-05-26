@@ -1,0 +1,44 @@
+<html>
+<head>
+	<title>Drive</title>
+</head>
+<body>
+	<table border="1">
+		<tr>
+			<th>Drive_Date_of_Creation</th>
+			<th>Drive_ID</th>
+			<th>Drive_Name</th>
+			<th>Company_ID</th>
+			<th>Comapany_Name</th>
+			<th>Comapany_Email</th>
+			<th>Offer_Type</th>
+			<th>Edit</th>
+			<th>Delete</th>
+		</tr>
+		<%
+        if(userData.length!=0){
+        var i=1;
+        userData.forEach(function(data){
+        %>
+        <tr>
+            <td><%= data.drive_create_date %></td>
+            <td><a href="/drive_entry/<%= data.drive_id %>"><%=data.drive_id %></a></td>
+            <td><%=data.drive_name %></td>
+            <td><%=data.com_id %></td>
+            <td><%=data.com_name %></td>
+	    <td><%= data.com_email %></td>
+	    <td><%= data.offer_type %></td>
+            <td><a href="/users/edit/<%=data.id%>">Edit</a></td>
+            <td><a href="/users/delete/<%=data.id%>">Delete</a></td>
+        </tr>
+        <%  i++; }) %>
+        <% } else{ %>
+            <tr>
+                <td colspan="7">No Data Found</td>
+            </tr>
+        <% } %>
+			
+		
+	</table>
+</body>
+</html>
