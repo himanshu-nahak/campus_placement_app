@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<%- include("./partials/head.ejs") %>
+    <%- include("./partials/nav_student.ejs") %>
+
+        <body>
+
+            <div class="container">
+                <h1> Add Company Resources </h1>
+                <form class="form" action="/companyresource" method="POST" enctype="multipart/form-data">
+
+                    <label>Company Name : </label>
+                    <input type="text" placeholder="Enter Company Name" name="company_name" class="form-control"
+                        required> <br>
+
+                    <label>Upload Resource File : </label>
+                    <input type="file" placeholder="Upload PDF" name="companyresource" class="form-control" required> <br>
+                    <button type="submit" class="btn btn-primary"> Upload</button>
+                    <a href="/companyresourceview" class="btn btn-secondary">View Resources</a>
+                </form>
+
+            </div>
+        </body>
+
+</html>
