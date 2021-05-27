@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<%- include("./partials/head.ejs") %>
+    <%- include("./partials/nav_student.ejs") %>
+   
+        <body>
+
+            <div class="container">
+                <h1> Company Resources </h1>
+
+                <table class="table">
+                    <tr>
+                        <th>Sl Number</th>
+                        <th>Company Name</th>
+                        <th>Download File</th>
+                        
+
+                    </tr>
+                    <% if(cr.length!=0){ var i=1; cr.forEach(function(cr_row){ %>
+                        <tr>
+                            <td>
+                                <%= i %>
+                            </td>
+                            <td>
+                                <%=cr_row.com_name %>
+                                
+                            </td>
+                            <td>
+                                <a href="<%=cr_row.cr_name %>" class="btn btn-success">Download</a>
+
+                            </td>
+                            
+                        </tr>
+                        <% i++; }) %>
+                            <% } else{ %>
+                                <tr>
+                                    <td colspan="7">No Data Found</td>
+                                </tr>
+                                <% } %>
+
+
+                </table>
+
+
+            </div>
+        </body>
+
+</html>

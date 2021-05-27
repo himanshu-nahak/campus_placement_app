@@ -94,11 +94,11 @@ app.post('/dashboard', urlencodedParser, (req, res) => {
 app.get('/myprofile', (req, res) => {
   user = {};
   user = current_user[0];
-  res.render('student_profile', {user})
+  res.render('student_profile', { user })
 
   // var msg = JSON.stringify(current_user)
   // console.log(">>"+msg)
- 
+
   // var msg = JSON.stringify(user)
   // console.log(">>"+msg)
   // res.send(user.usn);
@@ -107,7 +107,7 @@ app.get('/myprofile', (req, res) => {
 app.get('/dashboard', (req, res) => {
   user = {};
   user = current_user[0];
-  res.render('dashboard', {user})
+  res.render('dashboard', { user })
 });
 
 app.get('/signup', (req, res) => {
@@ -401,7 +401,7 @@ app.get('/view_drives', urlencodedParser, (req, res) => {
   var sql = "SELECT * FROM Drive;";
   console.log(sql);
 
-  let query = db.query(sql, (err,  data) => {
+  let query = db.query(sql, (err, data) => {
     if (err) throw err;
     console.log(data);
     if (data.length != 0) {
@@ -415,10 +415,10 @@ app.get('/view_drives', urlencodedParser, (req, res) => {
 
 app.get('/view_rounds/:drive_id', urlencodedParser, (req, res) => {
 
-  var sql = "SELECT * FROM Round_detail where drive_id='"+ req.params.drive_id +"' ;";
+  var sql = "SELECT * FROM Round_detail where drive_id='" + req.params.drive_id + "' ;";
   console.log(sql);
 
-  let query = db.query(sql, (err,  data) => {
+  let query = db.query(sql, (err, data) => {
     if (err) throw err;
     console.log(data);
     if (data.length != 0) {
@@ -441,12 +441,73 @@ app.get('/logout', (req, res) => {
   res.render('home.ejs');
 });
 
-
-
-
-
 app.get('/viewround', (req, res) => {
   res.render('test.ejs');
+});
+
+app.get('/companyresourceadd', (req, res) => {
+  res.render('company_resource_create.ejs');
+});
+
+
+app.get('/companyresourceview', (req, res) => {
+
+  var sql = "SELECT * FROM CompanyResource ;";
+  console.log(sql);
+  let query = db.query(sql, (err, data, fields) => {
+    if (err) throw err;
+    console.log(data);
+    if (data.length != 0) {
+      res.render('company_resource_view.ejs', { title: 'Company Resources', cr: data });
+    }
+    else
+      res.send("Company Records do not exist");
+  });
+
+});
+
+
+app.post('/companyresource', (req, res) => {
+  let crFile;
+  let crUploadPath;
+
+  if (!req.files || Object.keys(req.files).length === 0) {
+    return res.status(400).send('No files were uploaded.');
+  }
+  console.log(req.files)
+  console.log(req.body.company_name)
+
+
+
+  // The name of the input field (i.e. "sampleFile") is used to retrieve the uploaded file
+  crFile = req.files.companyresource;
+  // res.send(crFile)
+
+  // uploadPath = __dirname + '/public/resume/' + current_user_usn + '-' + sampleFile.name;
+  crUploadPath = __dirname + '/public/cr/' + req.files.companyresource.name;
+  // res.send(crUploadPath)
+  let dbpath = '/cr/' + req.files.companyresource.name;
+  //   // Use the mv() method to place the file somewhere on your server
+  crFile.mv(crUploadPath, function (err) {
+    if (err)
+      return res.status(500).send(err);
+
+    // ////////////
+
+    var sql = "INSERT INTO CompanyResource( com_name, cr_name) VALUES ('" + req.body.company_name + "','" + dbpath + "');";
+    console.log(sql);
+
+    let query = db.query(sql, (err, result) => {
+      if (err) throw err;
+      console.log("INSERTED COMPANY RESOURCE" + result);
+
+      res.redirect(302, '/companyresourceview');
+
+    });
+
+    // res.render('pc_dashboard')
+
+  });
 });
 
 
