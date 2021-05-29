@@ -45,6 +45,7 @@ var urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.use(bodyParser.json());
 
 
+
 // Passport Middleware
 
 //My Auth
@@ -52,7 +53,7 @@ current_user_usn = '';
 current_user = {};
 // Index Route
 app.get('/', (req, res) => {
-  res.render('home')
+  res.render('home', { title: 'Campus Placements' })
 });
 
 
@@ -269,7 +270,8 @@ app.post('/drive_create', urlencodedParser, (req, res) => {
   let query = db.query(sql, (err, result) => {
     if (err) throw err;
     console.log(result);
-    res.send('Drive Created Successfully');
+    res.redirect('/view_drives_spc')
+    // res.send('Drive Created Successfully');
   });
 
 
@@ -311,6 +313,19 @@ app.get('/drive_entry/:id', urlencodedParser, (req, res) => {
   });
 
 });
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.get('/round_list', urlencodedParser, (req, res) => {
 
@@ -355,42 +370,46 @@ app.get('/rounds/:id/:R_no/', urlencodedParser, (req, res) => {
   //  res.render('round_detail.ejs',{title: 'Round detail', userData : })
 });
 
-app.get('/Round_detail', (req, res) => {
-  res.render('create_round.ejs');
+app.get('/Round_detail/:drive_id', (req, res) => {
+  let drive_id = req.params.drive_id;
+  res.render('create_round.ejs', { drive_id });
 });
 
-app.post('/Round_detail', urlencodedParser, (req, res) => {
-  console.log("DEBUGGG: " + req.body.d_id);
-  console.log(req.files)
-  var sql = "INSERT into Round_detail(drive_id,Round_no,Round_name,selected_stud_list,Reg_start_date,Reg_end_date) values('" + req.body.d_id + "','" + req.body.R_no + "','" + req.body.R_name + "','" + req.body.studentNextRoundSheet + "','" + req.body.R_start + "','" + req.body.R_end + "');";
+app.post('/Round_detail/:drive_id', urlencodedParser, (req, res) => {
+  // res.send(req.body)
+  let drive_id = req.params.drive_id;
+  var sql = "INSERT into Round_detail(drive_id,Round_no,Round_name,selected_stud_list,Reg_start_date,Reg_end_date) values('" + drive_id + "','" + req.body.r_no + "','" + req.body.r_name + "','" + req.files.selected_student_file.name + "','" + req.body.r_start + "','" + req.body.r_end + "');";
   console.log(sql);
-  console.log("HHHH=>" + req.files.resume.name);
+  // console.log("HHHH=>" + req.files.round_selected_list.name);
 
-  let sampleFile;
-  let uploadPath;
+  let round_select_list_file;
+  let uploadPath_round_select_list;
 
   if (!req.files || Object.keys(req.files).length === 0) {
     console.log(req.files)
     return res.status(400).send('No files were uploaded.');
   }
 
-  sampleFile = req.files.resume;
+  round_select_list_file = req.files.selected_student_file;
   // uploadPath = __dirname + '/public/resume/' + current_user_usn + '-' + sampleFile.name;
-  uploadPath = __dirname + '/public/rounds/' + req.body.d_id + "-" + req.body.R_no + '.xlsx';
+  uploadPath_round_select_list = __dirname + '/public/rounds/' + req.body.d_id + "-" + req.body.r_no + '.xlsx';
 
   // Use the mv() method to place the file somewhere on your server
-  sampleFile.mv(uploadPath, function (err) {
+  round_select_list_file.mv(uploadPath_round_select_list, function (err) {
     if (err)
       return res.status(500).send(err);
 
     var query = db.query(sql, (err, data) => {
       if (err) throw err;
       console.log(data);
-      res.send("Record detail saved successfully");
+      res.redirect("/view_drives_spc");
     });
   });
 
 });
+
+
+
 
 //till here
 
@@ -413,6 +432,62 @@ app.get('/view_drives', urlencodedParser, (req, res) => {
 
 });
 
+app.get('/view_drives_spc', urlencodedParser, (req, res) => {
+
+  var sql = "SELECT * FROM Drive;";
+  console.log(sql);
+
+  let query = db.query(sql, (err, data) => {
+    if (err) throw err;
+    console.log(data);
+    if (data.length != 0) {
+      res.render('drives_spc.ejs', { title: 'Ongoing Placement Drives', drives: data });
+    }
+    else
+      res.send("User not found");
+  });
+
+});
+
+
+
+
+
+
+
+
+app.get('/del_drive/:driveid', (req, res) => {
+
+  var dsql = "DELETE  FROM Drive where drive_id='" + req.params.driveid + "';";
+  console.log(dsql);
+
+  let query = db.query(dsql, (err, data, fields) => {
+    if (err) throw err;
+    var ddsql = "DELETE  FROM Round_detail where drive_id='" + req.params.driveid + "';";
+    console.log(ddsql);
+
+    let query = db.query(ddsql, (err, data, fields) => {
+      if (err) throw err;
+      var sql = "SELECT * FROM Drive;";
+      console.log(sql);
+
+      let query = db.query(sql, (err, data) => {
+        if (err) throw err;
+        console.log(data);
+        if (data.length != 0) {
+          res.render('drives_spc.ejs', { title: 'Ongoing Placement Drives', drives: data });
+        }
+        else
+          res.send("User not found");
+      });
+    });
+  });
+});
+
+
+
+
+
 app.get('/view_rounds/:drive_id', urlencodedParser, (req, res) => {
 
   var sql = "SELECT * FROM Round_detail where drive_id='" + req.params.drive_id + "' ;";
@@ -433,6 +508,51 @@ app.get('/view_rounds/:drive_id', urlencodedParser, (req, res) => {
 
 });
 
+app.get('/spcview_rounds/:drive_id', urlencodedParser, (req, res) => {
+
+  var sql = "SELECT * FROM Round_detail where drive_id='" + req.params.drive_id + "' ;";
+  console.log(sql);
+  var drive_id = req.params.drive_id;
+  let query = db.query(sql, (err, data) => {
+    if (err) throw err;
+    console.log(data);
+    if (data.length != 0) {
+      // var startdate = moment(data.Reg_start_date).format('MM-DD-YYYY')
+      // console.log(startdate)
+      // data.Reg_start_date = startdate;
+      res.render('rounds_spc.ejs', { title: 'Drive Round List', rounds: data, drive_id });
+    }
+    else
+      res.render('rounds_spc.ejs', { title: 'Drive Round List', rounds: data, drive_id });
+  });
+
+});
+
+app.get('/delround/:d_id/:r_no', (req, res) => {
+
+  var dsql = "DELETE  FROM Round_detail where drive_id='" + req.params.d_id + "' and Round_no=" + req.params.r_no + ";";
+  console.log(dsql);
+
+  let query = db.query(dsql, (err, data, fields) => {
+    if (err) throw err;
+
+    var sql = "SELECT * FROM Round_detail where drive_id='" + req.params.drive_id + "' ;";
+    console.log(sql);
+    var drive_id = req.params.drive_id;
+    let query = db.query(sql, (err, data) => {
+      if (err) throw err;
+      console.log(data);
+      if (data.length != 0) {
+        // var startdate = moment(data.Reg_start_date).format('MM-DD-YYYY')
+        // console.log(startdate)
+        // data.Reg_start_date = startdate;
+        res.render('rounds_spc.ejs', { title: 'Drive Round List', rounds: data, drive_id });
+      }
+      else
+        res.render('rounds_spc.ejs', { title: 'Drive Round List', rounds: data, drive_id });
+    });
+  });
+});
 
 
 app.get('/logout', (req, res) => {
@@ -441,8 +561,9 @@ app.get('/logout', (req, res) => {
   res.render('home.ejs');
 });
 
-app.get('/viewround', (req, res) => {
-  res.render('test.ejs');
+app.get('/test', (req, res) => {
+  let path = '/resume/1RD19MCA05.pdf'
+  res.render('test.ejs', { path });
 });
 
 app.get('/companyresourceadd', (req, res) => {
@@ -459,6 +580,22 @@ app.get('/companyresourceview', (req, res) => {
     console.log(data);
     if (data.length != 0) {
       res.render('company_resource_view.ejs', { title: 'Company Resources', cr: data });
+    }
+    else
+      res.send("Company Records do not exist");
+  });
+
+});
+
+app.get('/companyresourceviewspc', (req, res) => {
+
+  var sql = "SELECT * FROM CompanyResource ;";
+  console.log(sql);
+  let query = db.query(sql, (err, data, fields) => {
+    if (err) throw err;
+    console.log(data);
+    if (data.length != 0) {
+      res.render('company_resource_spc.ejs', { title: 'Company Resources', cr: data });
     }
     else
       res.send("Company Records do not exist");
@@ -501,7 +638,7 @@ app.post('/companyresource', (req, res) => {
       if (err) throw err;
       console.log("INSERTED COMPANY RESOURCE" + result);
 
-      res.redirect(302, '/companyresourceview');
+      res.redirect(302, '/companyresourceviewspc');
 
     });
 
@@ -509,6 +646,31 @@ app.post('/companyresource', (req, res) => {
 
   });
 });
+
+
+app.get('/delcr/:crname', (req, res) => {
+
+  var dsql = "DELETE  FROM CompanyResource where com_name='" + req.params.crname + "';";
+  console.log(dsql);
+
+  let query = db.query(dsql, (err, data, fields) => {
+    if (err) throw err;
+
+    var sql = "SELECT * FROM CompanyResource ;";
+    console.log(sql);
+    let query = db.query(sql, (err, data, fields) => {
+      if (err) throw err;
+      console.log(data);
+      if (data.length != 0) {
+        res.render('company_resource_spc.ejs', { title: 'Company Resources', cr: data });
+      }
+      else
+        res.send("Company Records do not exist");
+    });
+  });
+});
+
+
 
 
 app.get('*', (req, res) => {

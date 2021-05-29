@@ -1,0 +1,58 @@
+<html>
+
+<head>
+    <title>Drive</title>
+    <%- include("./partials/head.ejs") %>
+
+</head>
+<%- include("./partials/nav_spc.ejs") %>
+
+<body>
+    <h1 style="margin-left: 15rem;">Ongoing Placement Drives</h1>
+    <br>
+    <div class="container">
+        <a href="/drive_create" class="btn btn-primary">Add Placement Drive</a>
+        <table class="table">
+            <tr>
+                <th>Drive_Date_of_Creation</th>
+                <th>Drive_ID</th>
+                <th>Drive_Name</th>
+                <th>Comapany_Name</th>
+                <th>Offer_Type</th>
+                <th>Action</th>
+
+            </tr>
+            <% if(drives.length!=0){ var i=1; drives.forEach(function(data){ %>
+                <tr>
+                    <td>
+                        <%= data.drive_create_date %>
+                    </td>
+                    <td><a href="/spcview_rounds/<%= data.drive_id %>">
+                            <%=data.drive_id %>
+                        </a></td>
+                    <td>
+                        <%=data.drive_name %>
+                    </td>
+                    <td>
+                        <%=data.com_name %>
+                    </td>
+                    <td>
+                        <%= data.offer_type %>
+                    </td>
+                    <td>
+                        <a href="/del_drive/<%= data.drive_id %>" class="btn btn-danger">X</a>
+                    </td>
+                </tr>
+                <% i++; }) %>
+                    <% } else{ %>
+                        <tr>
+                            <td colspan="7">No Rounds Found</td>
+                        </tr>
+                        <% } %>
+
+
+        </table>
+    </div>
+</body>
+
+</html>

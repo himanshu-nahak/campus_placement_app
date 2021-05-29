@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <%- include("./partials/head.ejs") %>
-    <%- include("./partials/nav_student.ejs") %>
+    <%- include("./partials/nav_spc.ejs") %>
 
         <body>
 
@@ -14,9 +14,10 @@
                         required> <br>
 
                     <label>Upload Resource File : </label>
-                    <input type="file" placeholder="Upload PDF" name="companyresource" class="form-control" required> <br>
+                    <input type="file" placeholder="Upload PDF" name="companyresource" class="form-control" required>
+                    <br>
                     <button type="submit" class="btn btn-primary"> Upload</button>
-                    <a href="/companyresourceview" class="btn btn-secondary">View Resources</a>
+                    <a href="/companyresourceviewspc" class="btn btn-secondary">View Resources</a>
                 </form>
 
             </div>
