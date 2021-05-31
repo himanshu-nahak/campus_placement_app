@@ -129,7 +129,9 @@ app.post('/signup', urlencodedParser, (req, res) => {
 });
 
 app.get('/upload_details', (req, res) => {
-  console.log("CURRENT USER:\n" + current_user[0].fname)
+  console.log("CURRENT USER:\n" + current_user[0].full_name)
+  console.log("CURRENT USER:\n" + current_user[0].mobile)
+
   res.render('upload_details', { current_user })
 })
 

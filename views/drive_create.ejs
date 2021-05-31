@@ -5,12 +5,18 @@
 <%- include("./partials/head.ejs") %>
     <%- include("./partials/nav_spc.ejs") %>
 
+    <header style="background-color: #071236;
+    height: 100px;
+    padding: 10px;
+    color: white;
+    text-align: center;">
+        <h1 class="centeritem">Create Placement Drive </h1>
+    </header>
 
-
-        <body>
-
-            <div class="container">
-                <h1> Drive Creation</h1>
+        <body style="background: #FF7477;">
+            <br>
+            <div class="container" style="border: 2px solid maroon; border-radius: 8px; background: #E69597;">
+                <br>
                 <form class="form" action="/drive_create" method="POST">
                     <label>Drive Alias : </label>
                     <input type="text" placeholder="Enter Drive Alias " name="d_id" class="form-control" required> <br>
@@ -35,7 +41,10 @@
                     <a href="/view_drives_spc" class="btn btn-secondary">View the company details</a>
 
                 </form>
+                <br>
+
             </div>
+
         </body>
 
 </html>

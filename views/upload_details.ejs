@@ -2,7 +2,8 @@
 <html>
 <%- include("./partials/head.ejs") %>
 
-    <body>
+    <body style="background-image: url('/images/mohammad-alizade-XgeZu2jBaVI-unsplash.jpg'); color: #f0f0f0;">
+        <%- include("./partials/nav_student.ejs") %>
 
         <div class="container">
             <h1> Student Profile </h1>
@@ -10,40 +11,40 @@
             </h2>
             <form class="form" action="/save_student_details" method="POST">
                 <label>Full Name : </label>
-                <input type="text" placeholder="Enter full name" name="full_name" class="form-control" required value="<%= %> "> <br>
+                <input type="text" placeholder="Enter full name" name="full_name" class="form-control" required value="<%= current_user[0].full_name%> "> <br>
                 <label>Personal Email : </label>
-                <input type="email" placeholder="Enter Personal Email" name="personal_email" class="form-control" required> <br>
+                <input type="email" placeholder="Enter Personal Email" name="personal_email" class="form-control" required  value="<%= current_user[0].personal_email%> "> <br>
                 <label>Mobile : </label>
-                <input type="number" placeholder="Enter Mobile" name="mobile" class="form-control" required> <br>
+                <input type="text" placeholder="Enter Mobile" name="mobile" class="form-control" required  value="<%= current_user[0].mobile %>"> <br>
                 <label>Date of Birth : </label>
-                <input type="date" placeholder="Enter Date of Birth" name="dob" class="form-control" required> <br>
+                <input type="date" placeholder="Enter Date of Birth" name="dob" class="form-control" required  value="<%= current_user[0].dob %> "> <br>
                 <label>Gender : </label>
                 <div class="form-check">
                     <label>Male</label>
-                    <input type="radio" name="gender" value='M' class="form-check-input"  > <br>
+                    <input type="radio" name="gender" value='M' class="form-check-input" > <br>
                     <label>Female</label>
                     <input type="radio"  name="gender" value="F" class="form-check-input"  > <br>
                 </div>
                 <label>Std 10 Percentage : </label>
-                <input type="number" placeholder="Enter Std 10 percentage" name="tenth_perc" class="form-control" step=".01" required > <br>
+                <input type="text" placeholder="Enter Std 10 percentage" name="tenth_perc" class="form-control" step=".01" required  value="<%= current_user[0].tenth_perc %> "> <br>
                 <label>Std 10 Passing Year : </label>
-                <input type="number" placeholder="Enter Std 10 Year of passing" name="tenth_yop" class="form-control" required > <br>
+                <input type="text" placeholder="Enter Std 10 Year of passing" name="tenth_yop" class="form-control" required value="<%= current_user[0].tenth_yop %> " > <br>
                 <label>Std 12 Percentage : </label>
-                <input type="number" placeholder="Enter Std 12 percentage" name="twelfth_perc" class="form-control" step=".01" required > <br>
+                <input type="text" placeholder="Enter Std 12 percentage" name="twelfth_perc" class="form-control" step=".01" required value="<%= current_user[0].twelfth_perc %> " > <br>
                 <label>Std 12 Passing Year : </label>
-                <input type="number" placeholder="Enter Std 12 Year of passing" name="twelfth_yop" class="form-control" required > <br>
+                <input type="text" placeholder="Enter Std 12 Year of passing" name="twelfth_yop" class="form-control" required value="<%= current_user[0].twelfth_yop %>"> <br>
                 <label>Graduation Percentage : </label>
-                <input type="number" placeholder="Enter Graduation Percentage" name="graduation_perc" class="form-control"  step=".01" required > <br>
+                <input type="text" placeholder="Enter Graduation Percentage" name="graduation_perc" class="form-control"  step=".01" required value="<%= current_user[0].graduation_perc %>"> <br>
                 <label>Graduation Passing Year : </label>
-                <input type="number" placeholder="Enter Graduation Year of passing" name="graduation_year" class="form-control" required > <br>
+                <input type="text" placeholder="Enter Graduation Year of passing" name="graduation_year" class="form-control" required value="<%= current_user[0].graduation_year %>"> <br>
                 <label>Graduation Degree : </label>
-                <input type="text" placeholder="Enter Graduation Degree" name="graduation_degree" class="form-control" required > <br>
+                <input type="text" placeholder="Enter Graduation Degree" name="graduation_degree" class="form-control" required value="<%= current_user[0].graduation_degree %>"> <br>
                 <label>Post Gradution CGPA: </label>
-                <input type="number" placeholder="Enter Post Gradution CGPA" name="pg_cgpa" class="form-control" step=".01" required > <br>
+                <input type="text" placeholder="Enter Post Gradution CGPA" name="pg_cgpa" class="form-control" step=".01" required value="<%= current_user[0].pg_cgpa %>"> <br>
                 <label>Year Gaps : </label>
-                <input type="text" placeholder="Enter Year Gaps. If no year gap, enter 0." name="year_gap" class="form-control" required > <br>
+                <input type="text" placeholder="Enter Year Gaps. If no year gap, enter 0." name="year_gap" class="form-control" required value="<%= current_user[0].year_gap %>"> <br>
                 <label>Permanent Address : </label>
-                <input type="textarea" placeholder="Enter Permanent Address" name="address" class="form-control" required > <br>
+                <input type="textarea" placeholder="Enter Permanent Address" name="address" class="form-control" required value="<%= current_user[0].address %>"> <br>
                 
                 <button type="submit" class="btn btn-primary"> Save Details</button>
 
