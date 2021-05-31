@@ -129,7 +129,9 @@ app.post('/signup', urlencodedParser, (req, res) => {
 });
 
 app.get('/upload_details', (req, res) => {
-  console.log("CURRENT USER:\n" + current_user[0].fname)
+  console.log("CURRENT USER:\n" + current_user[0].full_name)
+  console.log("CURRENT USER:\n" + current_user[0].mobile)
+
   res.render('upload_details', { current_user })
 })
 
@@ -151,6 +153,7 @@ app.post('/save_student_details', urlencodedParser, (req, res) => {
 
 
 app.get('/resume', (req, res) => {
+  // console.log("RESUME>>"+current_user[0].resume)
   res.render('resume', { current_user })
 })
 
@@ -178,7 +181,16 @@ app.post('/resume', function (req, res) {
     if (err)
       return res.status(500).send(err);
 
-    res.send('File uploaded!');
+    var sql = "UPDATE Student SET resume = '1';"
+    console.log(sql)
+    let query = db.query(sql, (err, result) => {
+      if (err) throw err;
+      console.log(result);
+      res.send('Resume uploaded!');
+
+    });
+
+
   });
 });
 
@@ -378,26 +390,33 @@ app.get('/Round_detail/:drive_id', (req, res) => {
 app.post('/Round_detail/:drive_id', urlencodedParser, (req, res) => {
   // res.send(req.body)
   let drive_id = req.params.drive_id;
-  var sql = "INSERT into Round_detail(drive_id,Round_no,Round_name,selected_stud_list,Reg_start_date,Reg_end_date) values('" + drive_id + "','" + req.body.r_no + "','" + req.body.r_name + "','" + req.files.selected_student_file.name + "','" + req.body.r_start + "','" + req.body.r_end + "');";
-  console.log(sql);
-  // console.log("HHHH=>" + req.files.round_selected_list.name);
+  // var sql = "INSERT into Round_detail(drive_id,Round_no,Round_name,selected_stud_list,Reg_start_date,Reg_end_date) values('" + drive_id + "','" + req.body.r_no + "','" + req.body.r_name + "','" + req.files.selected_student_file.name + "','" + req.body.r_start + "','" + req.body.r_end + "');";
+  // console.log(sql);
+  // // console.log("HHHH=>" + req.files.round_selected_list.name);
 
   let round_select_list_file;
   let uploadPath_round_select_list;
 
   if (!req.files || Object.keys(req.files).length === 0) {
     console.log(req.files)
+    console.log(req.body.selected_student_file)
+
     return res.status(400).send('No files were uploaded.');
   }
-
+  var d = new Date().getTime();;
   round_select_list_file = req.files.selected_student_file;
   // uploadPath = __dirname + '/public/resume/' + current_user_usn + '-' + sampleFile.name;
-  uploadPath_round_select_list = __dirname + '/public/rounds/' + req.body.d_id + "-" + req.body.r_no + '.xlsx';
+  uploadPath_round_select_list = __dirname + '/public/rounds/' + d + req.files.selected_student_file.name;
 
   // Use the mv() method to place the file somewhere on your server
   round_select_list_file.mv(uploadPath_round_select_list, function (err) {
     if (err)
       return res.status(500).send(err);
+
+
+    let dbpath = '/rounds/' + d + req.files.selected_student_file.name;
+
+    var sql = "INSERT into Round_detail(drive_id,Round_no,Round_name,selected_stud_list,Reg_start_date,Reg_end_date) values('" + drive_id + "','" + req.body.r_no + "','" + req.body.r_name + "','" + dbpath + "','" + req.body.r_start + "','" + req.body.r_end + "');";
 
     var query = db.query(sql, (err, data) => {
       if (err) throw err;
@@ -536,21 +555,22 @@ app.get('/delround/:d_id/:r_no', (req, res) => {
   let query = db.query(dsql, (err, data, fields) => {
     if (err) throw err;
 
-    var sql = "SELECT * FROM Round_detail where drive_id='" + req.params.drive_id + "' ;";
-    console.log(sql);
-    var drive_id = req.params.drive_id;
-    let query = db.query(sql, (err, data) => {
-      if (err) throw err;
-      console.log(data);
-      if (data.length != 0) {
-        // var startdate = moment(data.Reg_start_date).format('MM-DD-YYYY')
-        // console.log(startdate)
-        // data.Reg_start_date = startdate;
-        res.render('rounds_spc.ejs', { title: 'Drive Round List', rounds: data, drive_id });
-      }
-      else
-        res.render('rounds_spc.ejs', { title: 'Drive Round List', rounds: data, drive_id });
-    });
+    // var sql = "SELECT * FROM Round_detail where drive_id='" + req.params.drive_id + "' ;";
+    // console.log(sql);
+    // var drive_id = req.params.drive_id;
+    // let query = db.query(sql, (err, data) => {
+    //   if (err) throw err;
+    //   console.log(data);
+    //   if (data.length != 0) {
+    // var startdate = moment(data.Reg_start_date).format('MM-DD-YYYY')
+    // console.log(startdate)
+    // data.Reg_start_date = startdate;
+    // res.render('rounds_spc.ejs', { title: 'Drive Round List', rounds: data, drive_id });
+    res.redirect('/view_drives_spc')
+    // }
+    //   else
+    //     res.redirect('/view_drives_spc')
+    // });
   });
 });
 

@@ -3,8 +3,8 @@ body {
         font-size: large;
   }
 
-#navbar{
-
+.navbar .navbar-dark .bg-dark{
+background-color: #23B5D3;
 }
 
 #brand {
@@ -19,11 +19,14 @@ body {
 
   #navlink {
     color: #df2935;
-    font-weight: 400;
+    font-weight: 600;
+
+
   }
   #navlink:hover {
     color: #eaf6ff;
     font-weight: 400;
     border-radius: 8px;
     background-image: linear-gradient(45deg, #df2935, #343a40);
+  
   }
